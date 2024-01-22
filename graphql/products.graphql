@@ -1,0 +1,103 @@
+query products($id: [Int],$limit: Int, $page: Int) {
+  products(id: $id, limit: $limit, page: $page) {
+   data {
+      id
+      name
+      description
+      vendor
+      statusCode
+      giftCard
+      createdAt
+      updatedAt
+      media{
+        id
+        image{
+          filePath
+        }
+      }
+    }
+    total
+    per_page
+    current_page
+    from
+    to
+    last_page
+    has_more_pages
+  }
+}
+query product($id: Int) {
+  product(id: $id) {
+    id
+    name
+    description
+    vendor
+    statusCode
+    giftCard
+    createdAt
+    updatedAt
+    publishedAt
+    tags {
+      id
+      name
+    }
+    collections {
+      id
+      name
+      image{
+        id
+        height
+        width
+        name
+      }
+      products{
+        id
+      }
+      
+    }
+    media {
+      id
+      position
+      altText
+      mediaContentType
+      status
+      width
+      height
+    }
+    productCategory
+  }
+}
+
+
+mutation createProduct($name: String!,$description: String, $vendor: String,$statusCode: ProductStatusCode!){
+  createProduct(
+    name: $name
+    description: $description
+    vendor: $vendor
+    statusCode: $statusCode
+  ) {
+    id
+    name
+    description
+    vendor
+    statusCode
+    giftCard
+    createdAt
+    updatedAt
+    publishedAt
+    tags {
+      id
+      name
+    }
+    media {
+      id
+      position
+      altText
+      mediaContentType
+      status
+      width
+      height
+    }
+    productCategory
+  }
+}
+
