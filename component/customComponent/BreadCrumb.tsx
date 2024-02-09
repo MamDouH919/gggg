@@ -26,7 +26,6 @@ const classes = {
 const Root = styled("div")(({ theme }) => ({
     marginBottom: theme.spacing(2),
     [`& .${classes.list}`]: {
-        padding: theme.spacing(0, 2),
         [`& ol`]: {
             height: "100%"
         },
@@ -42,7 +41,7 @@ const NextBreadcrumb = () => {
             <Breadcrumbs
                 separator={<NavigateNext fontSize="small" />}
                 aria-label="breadcrumb"
-                sx={{ height: "48px", background: "rgb(245, 247, 249)" }}
+                sx={{ height: "48px" }}
                 className={classes.list}
             >
                 <StyledLink href={'/'}>home page</StyledLink>
@@ -53,7 +52,7 @@ const NextBreadcrumb = () => {
                                 Products
                             </StyledLink>
                         ) : (
-                            <Typography key={index} color="text.primary">
+                            <Typography key={index} color="text.primary" fontSize="16px">
                                 {Number(link) ? "details" : link}
                             </Typography>
                         )

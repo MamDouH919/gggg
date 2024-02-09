@@ -1,14 +1,13 @@
 import type { Metadata } from 'next'
-import './globals.css'
+// import './globals.css'
 import { ApolloWrapper } from '@/lib/apollo-wrapper'
 import * as React from 'react';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 import { ThemeProvider } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import CssBaseline from '@mui/material/CssBaseline';
+// import Box from '@mui/material/Box';
 import theme from '@/theme';
-import Navbar from '@/component/front/Navbar';
-import { appWithTranslation } from 'next-i18next'
+import './globals.css'
+import CssBaseline from '@mui/material/CssBaseline';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -20,20 +19,25 @@ function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+
   return (
     <html lang="en">
-      <AppRouterCacheProvider options={{ enableCssLayer: true }}>
-        <ThemeProvider theme={theme}>
-          <body style={{ background: theme?.palette?.background?.default }}>
-            <ApolloWrapper>
+      <body style={{ background: theme?.palette?.background?.default }}>
+        <ApolloWrapper>
+          <AppRouterCacheProvider options={{ enableCssLayer: true }}>
+            <ThemeProvider theme={theme}>
+
               <CssBaseline />
-              {children}
-            </ApolloWrapper>
-          </body>
-        </ThemeProvider>
-      </AppRouterCacheProvider>
+              <body style={{ background: theme?.palette?.background?.default }}>
+                {children}
+              </body>
+
+            </ThemeProvider>
+          </AppRouterCacheProvider>
+        </ApolloWrapper>
+      </body>
     </html>
   )
 }
 
-export default RootLayout
+export default RootLayout 

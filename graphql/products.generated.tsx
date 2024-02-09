@@ -5,8 +5,10 @@ import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type ProductsQueryVariables = Types.Exact<{
   id?: Types.InputMaybe<Array<Types.InputMaybe<Types.Scalars['Int']['input']>> | Types.InputMaybe<Types.Scalars['Int']['input']>>;
+  categoryId?: Types.InputMaybe<Array<Types.InputMaybe<Types.Scalars['Int']['input']>> | Types.InputMaybe<Types.Scalars['Int']['input']>>;
   limit?: Types.InputMaybe<Types.Scalars['Int']['input']>;
   page?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  search?: Types.InputMaybe<Types.Scalars['String']['input']>;
 }>;
 
 
@@ -17,7 +19,7 @@ export type ProductQueryVariables = Types.Exact<{
 }>;
 
 
-export type ProductQuery = { __typename?: 'Query', product: { __typename?: 'Product', id: number, name: string, description?: string | null, vendor?: string | null, statusCode: Types.ProductStatusCode, giftCard: boolean, createdAt?: any | null, updatedAt?: any | null, publishedAt?: any | null, productCategory?: string | null, tags?: Array<{ __typename?: 'Tag', id: number, name: string } | null> | null, collections?: Array<{ __typename?: 'Collection', id: number, name: string, image?: { __typename?: 'Image', id: number, height: string, width: string, name: string } | null, products?: Array<{ __typename?: 'Product', id: number } | null> | null } | null> | null, media?: Array<{ __typename?: 'ProductMedia', id: number, position: number, altText: string, mediaContentType: Types.MediaContentTypeCode, status: Types.MediaStatusCode, width?: number | null, height?: number | null } | null> | null } };
+export type ProductQuery = { __typename?: 'Query', product: { __typename?: 'Product', id: number, name: string, description?: string | null, vendor?: string | null, statusCode: Types.ProductStatusCode, giftCard: boolean, createdAt?: any | null, updatedAt?: any | null, publishedAt?: any | null, tags?: Array<{ __typename?: 'Tag', id: number, name: string } | null> | null, media?: Array<{ __typename?: 'ProductMedia', id: number, position: number, altText: string, mediaContentType: Types.MediaContentTypeCode, status: Types.MediaStatusCode, width?: number | null, height?: number | null, image?: { __typename?: 'Image', filePath: string } | null } | null> | null, variants?: Array<{ __typename?: 'ProductVariant', id: number, position: number, DisplayName: string, price: number, originCountryCode?: string | null, sku: string, quantity: number, weight: number, values?: Array<{ __typename?: 'ProductOptionValue', id: number, name: string, option?: { __typename?: 'ProductOption', id: number, name: string, position: number } | null } | null> | null } | null> | null, options?: Array<{ __typename?: 'ProductOption', id: number, position: number, name: string, values?: Array<{ __typename?: 'ProductOptionValue', id: number, name: string, position: number } | null> | null } | null> | null } };
 
 export type CreateProductMutationVariables = Types.Exact<{
   name: Types.Scalars['String']['input'];
@@ -27,12 +29,18 @@ export type CreateProductMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateProductMutation = { __typename?: 'Mutation', createProduct: { __typename?: 'Product', id: number, name: string, description?: string | null, vendor?: string | null, statusCode: Types.ProductStatusCode, giftCard: boolean, createdAt?: any | null, updatedAt?: any | null, publishedAt?: any | null, productCategory?: string | null, tags?: Array<{ __typename?: 'Tag', id: number, name: string } | null> | null, media?: Array<{ __typename?: 'ProductMedia', id: number, position: number, altText: string, mediaContentType: Types.MediaContentTypeCode, status: Types.MediaStatusCode, width?: number | null, height?: number | null } | null> | null } };
+export type CreateProductMutation = { __typename?: 'Mutation', createProduct: { __typename?: 'Product', id: number, name: string, description?: string | null, vendor?: string | null, statusCode: Types.ProductStatusCode, giftCard: boolean, createdAt?: any | null, updatedAt?: any | null, publishedAt?: any | null, tags?: Array<{ __typename?: 'Tag', id: number, name: string } | null> | null, media?: Array<{ __typename?: 'ProductMedia', id: number, position: number, altText: string, mediaContentType: Types.MediaContentTypeCode, status: Types.MediaStatusCode, width?: number | null, height?: number | null } | null> | null, category?: { __typename?: 'Category', name: string } | null } };
 
 
 export const ProductsDocument = gql`
-    query products($id: [Int], $limit: Int, $page: Int) {
-  products(id: $id, limit: $limit, page: $page) {
+    query products($id: [Int], $categoryId: [Int], $limit: Int, $page: Int, $search: String) {
+  products(
+    id: $id
+    categoryId: $categoryId
+    limit: $limit
+    page: $page
+    search: $search
+  ) {
     data {
       id
       name
@@ -73,8 +81,10 @@ export const ProductsDocument = gql`
  * const { data, loading, error } = useProductsQuery({
  *   variables: {
  *      id: // value for 'id'
+ *      categoryId: // value for 'categoryId'
  *      limit: // value for 'limit'
  *      page: // value for 'page'
+ *      search: // value for 'search'
  *   },
  * });
  */
@@ -110,21 +120,11 @@ export const ProductDocument = gql`
       id
       name
     }
-    collections {
-      id
-      name
-      image {
-        id
-        height
-        width
-        name
-      }
-      products {
-        id
-      }
-    }
     media {
       id
+      image {
+        filePath
+      }
       position
       altText
       mediaContentType
@@ -132,7 +132,35 @@ export const ProductDocument = gql`
       width
       height
     }
-    productCategory
+    variants {
+      id
+      position
+      DisplayName
+      price
+      originCountryCode
+      sku
+      quantity
+      weight
+      values {
+        id
+        name
+        option {
+          id
+          name
+          position
+        }
+      }
+    }
+    options {
+      id
+      position
+      name
+      values {
+        id
+        name
+        position
+      }
+    }
   }
 }
     `;
@@ -199,7 +227,9 @@ export const CreateProductDocument = gql`
       width
       height
     }
-    productCategory
+    category {
+      name
+    }
   }
 }
     `;

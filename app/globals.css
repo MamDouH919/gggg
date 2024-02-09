@@ -1,5 +1,16 @@
 html,
-body,
+body {
+  height: 100vh;
+}
+
 :root {
   height: 100%;
+}
+
+nextjs-portal {
+  display: none;
+}
+
+img {
+  max-width: 100%;
 }

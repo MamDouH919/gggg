@@ -1,5 +1,5 @@
-query products($id: [Int],$limit: Int, $page: Int) {
-  products(id: $id, limit: $limit, page: $page) {
+query products($id: [Int],$categoryId: [Int],$limit: Int, $page: Int,$search: String) {
+  products(id: $id,categoryId: $categoryId, limit: $limit, page: $page,search:$search) {
    data {
       id
       name
@@ -25,9 +25,11 @@ query products($id: [Int],$limit: Int, $page: Int) {
     has_more_pages
   }
 }
+
+
 query product($id: Int) {
   product(id: $id) {
-    id
+   id
     name
     description
     vendor
@@ -40,22 +42,12 @@ query product($id: Int) {
       id
       name
     }
-    collections {
-      id
-      name
-      image{
-        id
-        height
-        width
-        name
-      }
-      products{
-        id
-      }
-      
-    }
     media {
       id
+      
+      image{
+        filePath
+      }
       position
       altText
       mediaContentType
@@ -63,7 +55,35 @@ query product($id: Int) {
       width
       height
     }
-    productCategory
+    variants {
+      id
+      position
+      DisplayName
+      price
+      originCountryCode
+      sku
+      quantity
+      weight
+      values{
+        id
+        name
+        option{
+          id
+          name
+          position
+        }
+      }
+    }
+    options {
+      id
+      position
+      name
+      values{
+        id
+        name
+        position
+      }
+    }
   }
 }
 
@@ -97,7 +117,9 @@ mutation createProduct($name: String!,$description: String, $vendor: String,$sta
       width
       height
     }
-    productCategory
+    category{
+      name
+    }
   }
 }
 

@@ -20,15 +20,23 @@ const Root = styled(Link)(({ theme }) => ({
     // background: theme.palette.background.default,
     textDecoration: "none",
     color: theme.palette.text.secondary,
-    opacity: 0.8,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     fontSize: "16px",
     textTransform: "capitalize",
+    opacity: 0.7,
     margin: theme.spacing(0, 1),
+    transition: "all 0.5s",
+    [`&:hover`]: {
+        opacity: 1,
+        color: `${theme.palette.primary.main}!Important`,
+        // font: "bold",
+        // textDecoration: "underline",
+    },
     [`&.${classes.active}`]: {
-        color: theme.palette.primary.dark
+        opacity: 1,
+        color: `${theme.palette.primary.main}!Important`,
     },
 }));
 
@@ -39,9 +47,9 @@ export const NavLink = ({ href, exact, children }: any) => {
 
     return (
         <Root href={href} className={isActive ? classes.active : " "}>
-            {/* <Typography color={"text.primary"}> */}
-            {children}
-            {/* </Typography> */}
+            <Typography variant='h6'>
+                {children}
+            </Typography>
         </Root>
     )
 }

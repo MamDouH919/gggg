@@ -20,14 +20,24 @@ export type Scalars = {
 /** A Category type */
 export type Category = {
   __typename?: 'Category';
+  /** children categories */
+  children?: Maybe<Array<Maybe<Category>>>;
   /** Identifier */
   id: Scalars['Int']['output'];
-  /** Product name */
+  /** Collection image */
+  image?: Maybe<Image>;
+  /** category parent indicator */
+  isParent: Scalars['Boolean']['output'];
+  /** category root indicator */
+  isRoot: Scalars['Boolean']['output'];
+  /** category name */
   name: Scalars['String']['output'];
-  /** Identifier */
+  /** parent category */
   parent?: Maybe<Category>;
   /** products name */
   products?: Maybe<Array<Maybe<Product>>>;
+  /** count of the products under category */
+  productsCount: Scalars['Int']['output'];
 };
 
 export type CategoryPagination = {
@@ -106,19 +116,27 @@ export type Image = {
   width: Scalars['String']['output'];
 };
 
-/** Media Content Type */
+/** The type of media file */
 export enum MediaContentTypeCode {
+  /** External video */
   ExternalVideo = 'EXTERNAL_VIDEO',
+  /** Image */
   Image = 'IMAGE',
+  /** Model 3d */
   Model_3D = 'MODEL_3D',
+  /** Video */
   Video = 'VIDEO'
 }
 
-/** Media Status code */
+/** Status of the media uploading file */
 export enum MediaStatusCode {
+  /** Failed */
   Failed = 'FAILED',
+  /** Processing */
   Processing = 'PROCESSING',
+  /** Ready */
   Ready = 'READY',
+  /** Uploaded */
   Uploaded = 'UPLOADED'
 }
 
@@ -126,7 +144,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   /** Upload Media files */
   UploadMedia: UploadMedia;
-  /** add product to category */
+  /** add products to category */
   categoryAddProduct: Category;
   /** Remove product from category */
   categoryRemoveProduct: Category;
@@ -138,22 +156,48 @@ export type Mutation = {
   createCategory: Category;
   /** create new Collection for products */
   createCollection: Collection;
-  /** create new Product */
+  /** Add new Product */
   createProduct: Product;
-  /** create new Product media */
-  createProductMedia: Product;
+  /** createProduct Variant */
+  createProductOptions?: Maybe<Array<ProductOption>>;
+  /** createProduct Variant */
+  createProductVariants?: Maybe<Array<ProductVariant>>;
   /** delete categorys */
   deleteCategory: Scalars['Boolean']['output'];
   /** delete collections */
   deleteCollection: Scalars['Boolean']['output'];
   /** Delete Product */
   deleteProduct: Scalars['Boolean']['output'];
+  /** Delete Product option value */
+  deleteProductOptionValues: Scalars['Boolean']['output'];
+  /** Delete Product options */
+  deleteProductOptions: Scalars['Boolean']['output'];
+  /** deleteProductVariants */
+  deleteProductVariants: Scalars['Boolean']['output'];
+  /** login user */
+  login: Scalars['String']['output'];
+  /** add media to product */
+  productAddMedia: Product;
+  /** Product remove media from it */
+  productRemoveMedia: Product;
+  /** delete review to product */
+  productRemoveReview: Scalars['Boolean']['output'];
+  /** add media to product variant */
+  productVariantAddMedia: ProductVariant;
+  /** Product variant remove media from it */
+  productVariantRemoveMedia: ProductVariant;
   /** update old category for products */
   updateCategory: Category;
   /** update old Collection for products */
   updateCollection: Collection;
   /** update Product */
   updateProduct: Product;
+  /** Update Product Options */
+  updateProductOptions?: Maybe<Array<ProductOption>>;
+  /** update Product review */
+  updateProductReview: ProductReview;
+  /** update Product variants */
+  updateProductVariants: Product;
 };
 
 
@@ -165,7 +209,6 @@ export type MutationUploadMediaArgs = {
 
 export type MutationCategoryAddProductArgs = {
   categoryId: Scalars['Int']['input'];
-  parentId?: InputMaybe<Scalars['Int']['input']>;
   productId?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
@@ -189,18 +232,21 @@ export type MutationCollectionRemoveProductArgs = {
 
 
 export type MutationCreateCategoryArgs = {
-  description?: InputMaybe<Scalars['String']['input']>;
+  imageId?: InputMaybe<Scalars['Int']['input']>;
   name: Scalars['String']['input'];
+  parentId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type MutationCreateCollectionArgs = {
   description?: InputMaybe<Scalars['String']['input']>;
+  imageId?: InputMaybe<Scalars['Int']['input']>;
   name: Scalars['String']['input'];
 };
 
 
 export type MutationCreateProductArgs = {
+  categoryId?: InputMaybe<Scalars['Int']['input']>;
   collections?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
   description?: InputMaybe<Scalars['String']['input']>;
   giftCard?: InputMaybe<Scalars['Boolean']['input']>;
@@ -212,9 +258,15 @@ export type MutationCreateProductArgs = {
 };
 
 
-export type MutationCreateProductMediaArgs = {
-  media?: InputMaybe<Array<ProductMediaInput>>;
+export type MutationCreateProductOptionsArgs = {
+  options?: InputMaybe<Array<ProductOptionCreateInput>>;
   productId: Scalars['Int']['input'];
+};
+
+
+export type MutationCreateProductVariantsArgs = {
+  productId: Scalars['Int']['input'];
+  variants?: InputMaybe<Array<ProductVariantCreateInput>>;
 };
 
 
@@ -233,21 +285,75 @@ export type MutationDeleteProductArgs = {
 };
 
 
+export type MutationDeleteProductOptionValuesArgs = {
+  id?: InputMaybe<Array<Scalars['Int']['input']>>;
+};
+
+
+export type MutationDeleteProductOptionsArgs = {
+  id?: InputMaybe<Array<Scalars['Int']['input']>>;
+};
+
+
+export type MutationDeleteProductVariantsArgs = {
+  id?: InputMaybe<Array<Scalars['Int']['input']>>;
+};
+
+
+export type MutationLoginArgs = {
+  device: Scalars['String']['input'];
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+};
+
+
+export type MutationProductAddMediaArgs = {
+  media?: InputMaybe<Array<InputMaybe<ProductMediaInput>>>;
+  productId: Scalars['Int']['input'];
+};
+
+
+export type MutationProductRemoveMediaArgs = {
+  mediaId: Array<InputMaybe<Scalars['Int']['input']>>;
+  productId: Scalars['Int']['input'];
+};
+
+
+export type MutationProductRemoveReviewArgs = {
+  reviewId: Scalars['Int']['input'];
+};
+
+
+export type MutationProductVariantAddMediaArgs = {
+  media?: InputMaybe<ProductMediaInput>;
+  variantId: Scalars['Int']['input'];
+};
+
+
+export type MutationProductVariantRemoveMediaArgs = {
+  mediaId: Scalars['Int']['input'];
+  variantId: Scalars['Int']['input'];
+};
+
+
 export type MutationUpdateCategoryArgs = {
-  description?: InputMaybe<Scalars['String']['input']>;
-  id?: InputMaybe<Scalars['Int']['input']>;
-  name: Scalars['String']['input'];
+  id: Scalars['Int']['input'];
+  imageId?: InputMaybe<Scalars['Int']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  parentId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type MutationUpdateCollectionArgs = {
   description?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
+  imageId?: InputMaybe<Scalars['Int']['input']>;
   name: Scalars['String']['input'];
 };
 
 
 export type MutationUpdateProductArgs = {
+  categoryId?: InputMaybe<Scalars['Int']['input']>;
   collections?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
   description?: InputMaybe<Scalars['String']['input']>;
   giftCard?: InputMaybe<Scalars['Boolean']['input']>;
@@ -258,9 +364,34 @@ export type MutationUpdateProductArgs = {
   vendor?: InputMaybe<Scalars['String']['input']>;
 };
 
+
+export type MutationUpdateProductOptionsArgs = {
+  optionsToAdd?: InputMaybe<Array<ProductOptionCreateInput>>;
+  optionsToDelete?: InputMaybe<Array<Scalars['Int']['input']>>;
+  optionsToUpdate?: InputMaybe<Array<ProductOptionUpdateInput>>;
+  productId: Scalars['Int']['input'];
+};
+
+
+export type MutationUpdateProductReviewArgs = {
+  body?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  rating?: InputMaybe<Scalars['Float']['input']>;
+};
+
+
+export type MutationUpdateProductVariantsArgs = {
+  productId: Scalars['Int']['input'];
+  variantsToAdd?: InputMaybe<Array<ProductVariantCreateInput>>;
+  variantsToDelete?: InputMaybe<Array<Scalars['Int']['input']>>;
+  variantsToUpdate?: InputMaybe<Array<ProductVariantUpdateInput>>;
+};
+
 /** A Product */
 export type Product = {
   __typename?: 'Product';
+  /** product Category */
+  category?: Maybe<Category>;
   /** Collections for products */
   collections?: Maybe<Array<Maybe<Collection>>>;
   /** Update date */
@@ -275,16 +406,20 @@ export type Product = {
   media?: Maybe<Array<Maybe<ProductMedia>>>;
   /** Product name */
   name: Scalars['String']['output'];
-  /** product Category */
-  productCategory?: Maybe<Scalars['String']['output']>;
+  /** product options */
+  options?: Maybe<Array<Maybe<ProductOption>>>;
   /** published to store time */
   publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** product reviews */
+  reviews?: Maybe<Array<Maybe<ProductReview>>>;
   /** type of the shipment */
   statusCode: ProductStatusCode;
   /** Tags for products */
   tags?: Maybe<Array<Maybe<Tag>>>;
   /** Update date */
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** product variants */
+  variants?: Maybe<Array<Maybe<ProductVariant>>>;
   /** Product vendor name */
   vendor?: Maybe<Scalars['String']['output']>;
 };
@@ -320,6 +455,68 @@ export type ProductMediaInput = {
   type?: InputMaybe<MediaContentTypeCode>;
 };
 
+/** A Product options */
+export type ProductOption = {
+  __typename?: 'ProductOption';
+  /** Identifier */
+  id: Scalars['Int']['output'];
+  /** Product Option name */
+  name: Scalars['String']['output'];
+  /** Product Option position */
+  position: Scalars['Int']['output'];
+  /** Product object */
+  product: Product;
+  /** Product Option name */
+  values?: Maybe<Array<Maybe<ProductOptionValue>>>;
+};
+
+/** Product option Input */
+export type ProductOptionCreateInput = {
+  /** Product variant name */
+  name: Scalars['String']['input'];
+  /** Product variant position */
+  position?: InputMaybe<Scalars['Int']['input']>;
+  /** Product option value */
+  values?: InputMaybe<Array<InputMaybe<ProductOptionValueInput>>>;
+};
+
+/** Product option Input */
+export type ProductOptionUpdateInput = {
+  /** Product option id */
+  id: Scalars['Int']['input'];
+  /** Product option name */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Product variant position */
+  position?: InputMaybe<Scalars['Int']['input']>;
+  /** Product option value */
+  values?: InputMaybe<Array<InputMaybe<ProductOptionValueInput>>>;
+};
+
+/** A Product option like color size */
+export type ProductOptionValue = {
+  __typename?: 'ProductOptionValue';
+  /** Identifier */
+  id: Scalars['Int']['output'];
+  /** Media alt text */
+  name: Scalars['String']['output'];
+  /** Media for the variant */
+  option?: Maybe<ProductOption>;
+  /** Media position */
+  position: Scalars['Int']['output'];
+  /** Media for the variant */
+  variantOptionValues?: Maybe<Array<Maybe<ProductVariantOptionValue>>>;
+  /** variant under the otion values */
+  variants?: Maybe<Array<Maybe<ProductVariant>>>;
+};
+
+/** create Product Option Value Input */
+export type ProductOptionValueInput = {
+  /** A name of option value type */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** A media position */
+  position?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type ProductPagination = {
   __typename?: 'ProductPagination';
   /** Current page of the cursor */
@@ -340,23 +537,183 @@ export type ProductPagination = {
   total: Scalars['Int']['output'];
 };
 
-/** Product status */
+/** A Product review */
+export type ProductReview = {
+  __typename?: 'ProductReview';
+  /** Product review text */
+  body: Scalars['String']['output'];
+  /** Identifier */
+  id: Scalars['Int']['output'];
+  /** Product object */
+  product: Product;
+  /** Product Option rate */
+  rating: Scalars['Float']['output'];
+};
+
+/** The sort by attributes */
+export enum ProductSortCode {
+  /** Best selling */
+  BestSelling = 'BEST_SELLING',
+  /** Created date */
+  CreatedDate = 'CREATED_DATE',
+  /** Featured */
+  Featured = 'FEATURED',
+  /** Name */
+  Name = 'NAME',
+  /** Price */
+  Price = 'PRICE'
+}
+
+/** The product status */
 export enum ProductStatusCode {
+  /** Active */
   Active = 'ACTIVE',
+  /** Archived */
   Archived = 'ARCHIVED',
+  /** Draft */
   Draft = 'DRAFT'
 }
 
+/** A Product Variant black/M -> 100$ */
+export type ProductVariant = {
+  __typename?: 'ProductVariant';
+  /** Media alt text */
+  DisplayName: Scalars['String']['output'];
+  /** Media width */
+  barcode?: Maybe<Scalars['String']['output']>;
+  /** Identifier */
+  id: Scalars['Int']['output'];
+  /** Media for the variant */
+  media?: Maybe<ProductMedia>;
+  /** Media status */
+  originCountryCode?: Maybe<Scalars['String']['output']>;
+  /** Media position */
+  position: Scalars['Int']['output'];
+  /** Media alt text */
+  price: Scalars['Float']['output'];
+  /** product that has this variant */
+  product: Product;
+  /** Media width */
+  quantity: Scalars['Float']['output'];
+  /** require shipping attribute for this variant */
+  requireShipping?: Maybe<Scalars['Boolean']['output']>;
+  /** Stock Keeping Unit for variant */
+  sku: Scalars['String']['output'];
+  /** track */
+  trackInventory?: Maybe<Scalars['Boolean']['output']>;
+  /** Media for the variant */
+  values?: Maybe<Array<Maybe<ProductOptionValue>>>;
+  /** Media for the variant */
+  variantOptionValues?: Maybe<Array<Maybe<ProductVariantOptionValue>>>;
+  /** Media width */
+  weight: Scalars['Float']['output'];
+  /** Media width */
+  weightUnitCode: WeightUnitCode;
+};
+
+/** Product Variant Input */
+export type ProductVariantCreateInput = {
+  /** product variant barcode */
+  barcode?: InputMaybe<Scalars['String']['input']>;
+  /** product variant media */
+  media?: InputMaybe<ProductMediaInput>;
+  /** Product option vlaue ids to be appeneded */
+  optionValueIds?: InputMaybe<Array<Scalars['Int']['input']>>;
+  /** Product variant position */
+  position?: InputMaybe<Scalars['Int']['input']>;
+  /** Product variant price */
+  price?: InputMaybe<Scalars['Float']['input']>;
+  /** product variant quantity */
+  quantity?: InputMaybe<Scalars['Int']['input']>;
+  /** Product variant sku */
+  sku?: InputMaybe<Scalars['String']['input']>;
+  /** product variant weight */
+  weight?: InputMaybe<Scalars['Float']['input']>;
+  /** product variant weight unit code */
+  weightUnitCode?: InputMaybe<WeightUnitCode>;
+};
+
+/** A Product options */
+export type ProductVariantOptionValue = {
+  __typename?: 'ProductVariantOptionValue';
+  /** Identifier */
+  id: Scalars['Int']['output'];
+  /** Product Option name */
+  optionValue: ProductOptionValue;
+  /** Product Option position */
+  position: Scalars['Int']['output'];
+  /** Product object */
+  variant: ProductVariant;
+};
+
+export type ProductVariantPagination = {
+  __typename?: 'ProductVariantPagination';
+  /** Current page of the cursor */
+  current_page: Scalars['Int']['output'];
+  /** List of items on the current page */
+  data: Array<ProductVariant>;
+  /** Number of the first item returned */
+  from?: Maybe<Scalars['Int']['output']>;
+  /** Determines if cursor has more pages after the current page */
+  has_more_pages: Scalars['Boolean']['output'];
+  /** The last page (number of pages) */
+  last_page: Scalars['Int']['output'];
+  /** Number of items returned per page */
+  per_page: Scalars['Int']['output'];
+  /** Number of the last item returned */
+  to?: Maybe<Scalars['Int']['output']>;
+  /** Number of total items selected by the query */
+  total: Scalars['Int']['output'];
+};
+
+/** Product Variant to update Input */
+export type ProductVariantUpdateInput = {
+  /** product variant barcode */
+  barcode?: InputMaybe<Scalars['String']['input']>;
+  /** Product variant vlaue ids to be appeneded */
+  id: Scalars['Int']['input'];
+  /** Product option vlaue ids to be appeneded */
+  optionValueIds?: InputMaybe<Array<Scalars['Int']['input']>>;
+  /** Product variant position */
+  position?: InputMaybe<Scalars['Int']['input']>;
+  /** Product variant price */
+  price?: InputMaybe<Scalars['Float']['input']>;
+  /** product variant quantity */
+  quantity?: InputMaybe<Scalars['Int']['input']>;
+  /** Product variant sku */
+  sku?: InputMaybe<Scalars['String']['input']>;
+  /** product variant weight */
+  weight?: InputMaybe<Scalars['Float']['input']>;
+  /** product variant weight unit code */
+  weightUnitCode?: InputMaybe<WeightUnitCode>;
+};
+
 export type Query = {
   __typename?: 'Query';
-  /** list Collections */
+  /** list Categories */
   categories: CategoryPagination;
+  /** get Category by id */
+  category: Category;
+  /** get Collection by id */
+  collection: Collection;
   /** list Collections */
   collections: CollectionPagination;
+  /** get media */
+  getMedia: ProductMedia;
+  /** get list of media */
+  media: Array<Maybe<ProductMedia>>;
   /** product */
   product: Product;
+  /** Product OptionQuery by id */
+  productOption: ProductOption;
+  /** Product Variant by variant id */
+  productVariant: ProductVariant;
+  /** List of Products Variants */
+  productVariants: ProductVariantPagination;
   /** list products */
   products: ProductPagination;
+  /** list tags */
+  tags: TagPagination;
 };
 
 
@@ -364,6 +721,22 @@ export type QueryCategoriesArgs = {
   id?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   name?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  root?: InputMaybe<Scalars['Boolean']['input']>;
+  search?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type QueryCategoryArgs = {
+  id?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryCollectionArgs = {
+  id?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
   page?: InputMaybe<Scalars['Int']['input']>;
 };
 
@@ -373,6 +746,18 @@ export type QueryCollectionsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   name?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type QueryGetMediaArgs = {
+  id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryMediaArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  productId?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
 
@@ -381,7 +766,25 @@ export type QueryProductArgs = {
 };
 
 
+export type QueryProductOptionArgs = {
+  id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryProductVariantArgs = {
+  id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryProductVariantsArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
 export type QueryProductsArgs = {
+  categoryId?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
   fromDate?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   id?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -394,10 +797,20 @@ export type QueryProductsArgs = {
   vendor?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
-/** Sort Type Code */
+
+export type QueryTagsArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  name?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** Sort Type Code for sorting lists */
 export enum SortTypeCode {
-  Asc = 'ASC',
-  Desc = 'DESC'
+  /** Ascending */
+  Ascending = 'ASCENDING',
+  /** Descending */
+  Descending = 'DESCENDING'
 }
 
 /** A Tag For products */
@@ -417,6 +830,26 @@ export type TagInput = {
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type TagPagination = {
+  __typename?: 'TagPagination';
+  /** Current page of the cursor */
+  current_page: Scalars['Int']['output'];
+  /** List of items on the current page */
+  data: Array<Tag>;
+  /** Number of the first item returned */
+  from?: Maybe<Scalars['Int']['output']>;
+  /** Determines if cursor has more pages after the current page */
+  has_more_pages: Scalars['Boolean']['output'];
+  /** The last page (number of pages) */
+  last_page: Scalars['Int']['output'];
+  /** Number of items returned per page */
+  per_page: Scalars['Int']['output'];
+  /** Number of the last item returned */
+  to?: Maybe<Scalars['Int']['output']>;
+  /** Number of total items selected by the query */
+  total: Scalars['Int']['output'];
+};
+
 /** A Upload Media type */
 export type UploadMedia = {
   __typename?: 'UploadMedia';
@@ -427,3 +860,24 @@ export type UploadMedia = {
   /** uploaded media url */
   url: Scalars['String']['output'];
 };
+
+/** An user type */
+export type User = {
+  __typename?: 'User';
+  /** Identifier */
+  id: Scalars['Int']['output'];
+  /** name */
+  name: Scalars['String']['output'];
+};
+
+/** Weight Units */
+export enum WeightUnitCode {
+  /** Metric system unit of mass. */
+  Grams = 'GRAMS',
+  /** 1 kilogram equals 1000 grams. */
+  Kilograms = 'KILOGRAMS',
+  /** Imperial system unit of mass. */
+  Ounces = 'OUNCES',
+  /** 1 pound equals 16 ounces. */
+  Pounds = 'POUNDS'
+}

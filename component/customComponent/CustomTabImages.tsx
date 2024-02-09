@@ -40,17 +40,19 @@ function a11yProps(index: number) {
 }
 
 export default function CustomTabImages(props: any) {
-  const { tapDetails, hashKeys, settings } = props;
+  const { tapDetails, hashKeys, settings, val } = props;
 
   const [value, setValue] = React.useState(0);
+
+  React.useEffect(() => {
+    setValue(val)
+  }, [val])
 
   const handleChange = (event: any, newValue: number) => {
     setValue(newValue);
   };
 
   const ref = React.useRef();
-
-  console.log();
 
   return (
     <Box sx={{ width: "100%" }}>

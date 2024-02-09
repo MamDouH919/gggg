@@ -12,7 +12,7 @@ import { styled } from "@mui/material/styles";
 const Root = styled(Link)(({ theme }) => ({
     // background: theme.palette.background.default,
     textDecoration: "none",
-    color: theme.palette.text.primary,
+    color: theme.palette.primary.main,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -20,9 +20,9 @@ const Root = styled(Link)(({ theme }) => ({
     textTransform: "capitalize",
     margin: theme.spacing(0, 1),
     transition: "all 0.2s",
+    fontWeight: "bold",
     [`&:hover`]: {
         textDecoration: "underline",
-        color: theme.palette.primary.dark
     },
 }));
 

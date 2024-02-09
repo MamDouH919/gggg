@@ -10,24 +10,24 @@ import Image from 'next/image';
 import { styled } from "@mui/material/styles";
 import Search from './Search';
 import Stack from '@mui/material/Stack';
-import useWidth, { isWidthDown } from '../helperFunctions/width';
-import { Tab, Tabs } from '@mui/material';
+import { Divider, Tab, Tabs, Typography } from '@mui/material';
 import Link from 'next/link';
 import { NavLink } from '../customComponent/NavLink';
-
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+import { FaFacebookF, FaInstagram, FaTwitter, FaPinterestP, FaLinkedinIn, FaGooglePlusG, FaWifi } from "react-icons/fa";
+import { BsTelephoneFill } from "react-icons/bs";
+import { Login, ShoppingCart } from '@mui/icons-material';
 
 const PREFIX = "Navbar";
 const classes = {
     topHeader: `${PREFIX}-topHeader`,
     searchWrapper: `${PREFIX}-searchWrapper`,
     taps: `${PREFIX}-taps`,
+    topAppBar: `${PREFIX}-topAppBar`,
 };
 const Root = styled(AppBar)(({ theme }) => ({
     background: theme.palette.background.default,
     borderBottom: `1px solid #E0E0E0`,
-    boxShadow: "none",
+    // boxShadow: "none",
     [`& .${classes.topHeader}`]: {
         borderBottom: `1px solid #E0E0E0`,
     },
@@ -40,62 +40,74 @@ const Root = styled(AppBar)(({ theme }) => ({
             height: "100%"
         },
     },
+    [`&.${classes.topAppBar}`]: {
+        background: theme.palette.primary.main,
+    },
 }));
 
 function Navbar() {
-    const width = useWidth()
-    const isScreenSmall = isWidthDown("sm", width);
-
-    const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-    const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-
-    const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorElNav(event.currentTarget);
-    };
-    const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorElUser(event.currentTarget);
-    };
-
-    const handleCloseNavMenu = () => {
-        setAnchorElNav(null);
-    };
-
-    const handleCloseUserMenu = () => {
-        setAnchorElUser(null);
-    };
-
     return (
         <>
+            <Root position="static" className={classes.topAppBar}>
+                <Container maxWidth="xl">
+                    <Box sx={{ maxWidth: "100%", py: 1 }}>
+                        <Stack direction={"row"} justifyContent={"space-between"} alignItems={"center"} flexWrap={"wrap"} spacing={2} useFlexGap>
+                            <Stack direction={"row"} spacing={2}>
+                                <BsTelephoneFill />
+                                <Typography>01125454102</Typography>
+                                <Divider orientation="vertical" flexItem />
+                                <Typography>Login</Typography>
+                            </Stack>
+                            <Stack direction={"row"} spacing={3}>
+                                <FaFacebookF />
+                                <FaInstagram />
+                                <FaTwitter />
+                                <FaPinterestP />
+                                <FaGooglePlusG />
+                                <FaLinkedinIn />
+                                <FaWifi />
+                            </Stack>
+                        </Stack>
+                    </Box>
+                </Container>
+            </Root>
             <Root position="static">
                 <Container maxWidth="xl">
                     <Toolbar disableGutters sx={{ flexDirection: "column", py: 1 }}>
                         <Stack direction={"row"} spacing={2} width={"100%"} alignItems={"center"} justifyContent={"space-between"}>
                             <Link href='/'>
-                                <Image src='/logo.png' alt='logo' width={"80"} height={"80"} />
+                                {/* <Image src='/logo.png' alt='logo' width={"80"} height={"80"} /> */}
+                                <Image
+                                    alt='logo'
+                                    src='/logo.png'
+                                    width="0"
+                                    height="0"
+                                    sizes="100vw"
+                                    style={{ width: "80px", height: "auto" }}
+                                // className="w-full h-auto"
+                                />
                             </Link>
                             <Box className={classes.searchWrapper} sx={{ display: { xs: "none", sm: "none", md: "flex" } }}>
                                 <Search />
                             </Box>
-                            <Stack direction={"row"} useFlexGap spacing={1}>
-                                <Stack direction={"column"} alignItems={"center"}>
-                                    <IconButton aria-label="Profile">
-                                        <AdbIcon />
+                            <Stack direction={"row"} useFlexGap spacing={2}>
+                                <Stack alignItems={"center"}>
+                                    <IconButton aria-label="Profile" size='large' color='primary'>
+                                        <Login fontSize='inherit' />
                                     </IconButton>
+                                    <Typography color={"primary"}>
+                                        Login
+                                    </Typography>
                                 </Stack>
-                                <Stack direction={"column"} alignItems={"center"}>
-                                    <IconButton aria-label="Profile">
-                                        <AdbIcon />
-                                    </IconButton>
-                                </Stack>
-                                <Stack direction={"column"} alignItems={"center"}>
-                                    <IconButton aria-label="Profile">
-                                        <AdbIcon />
-                                    </IconButton>
-                                </Stack>
-                                <Stack direction={"column"} alignItems={"center"}>
-                                    <IconButton aria-label="Profile">
-                                        <AdbIcon />
-                                    </IconButton>
+                                <Stack alignItems={"center"}>
+                                    <Link href={'/my-cart'}>
+                                        <IconButton aria-label="Profile" color='primary' size='large'>
+                                            <ShoppingCart fontSize='inherit' />
+                                        </IconButton>
+                                    </Link>
+                                    <Typography color={"primary"}>
+                                        My cart
+                                    </Typography>
                                 </Stack>
                             </Stack>
                         </Stack>
@@ -109,18 +121,12 @@ function Navbar() {
             <Root position="static">
                 <Container maxWidth="xl">
                     <Box sx={{ maxWidth: "100%" }}>
-                        <Tabs
-                            value={1}
-                            variant="scrollable"
-                            scrollButtons={false}
-                            aria-label="scrollable prevent tabs example"
-                            className={classes.taps}
-                            TabIndicatorProps={{
-                                sx: {
-                                    height: 0
+                        <Stack direction={"row"} overflow={"auto"} py={2}
+                            sx={{
+                                "::-webkit-scrollbar": {
+                                    display: "none"
                                 }
-                            }}
-                        >
+                            }}>
                             <NavLink href="/" exact>
                                 home
                             </NavLink>
@@ -130,9 +136,8 @@ function Navbar() {
                             <NavLink href="/about" >
                                 About
                             </NavLink>
-                        </Tabs>
+                        </Stack>
                     </Box>
-
                 </Container>
             </Root>
         </>

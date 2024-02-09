@@ -1,0 +1,28 @@
+query categories($id: [Int],$limit: Int, $page: Int,$name: [String]) {
+  categories(id: $id, limit: $limit, page: $page,name:$name) {
+  data {
+      id
+      parent{
+        id
+        name
+      }
+      children{
+        id
+        name
+      }
+      image{
+        filePath
+      }
+      name
+      isParent
+    productsCount
+    }
+    total
+    per_page
+    current_page
+    from
+    to
+    last_page
+    has_more_pages
+  }
+}

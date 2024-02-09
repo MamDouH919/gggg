@@ -1,13 +1,14 @@
 "use client";
-import { ApolloLink, HttpLink } from "@apollo/client";
+import { ApolloLink, HttpLink, InMemoryCache, gql } from "@apollo/client";
 import {
     NextSSRApolloClient,
     ApolloNextAppProvider,
     NextSSRInMemoryCache,
     SSRMultipartLink,
 } from "@apollo/experimental-nextjs-app-support/ssr";
-import { loadErrorMessages, loadDevMessages,loadErrorMessageHandler } from "@apollo/client/dev";
+import { loadErrorMessages, loadDevMessages, loadErrorMessageHandler } from "@apollo/client/dev";
 import { setVerbosity } from "ts-invariant";
+import { onError } from "@apollo/client/link/error";
 
 if (process.env.NODE_ENV === "development") {
     setVerbosity("debug");
@@ -17,10 +18,38 @@ if (process.env.NODE_ENV === "development") {
 }
 
 function makeClient() {
-    const httpLink = new HttpLink({
-        uri: "http://accuratess.mywire.org:8003/graphql",
-        fetchOptions: { cache: "no-store" },
+    const cache = new InMemoryCache({
+        addTypename: false,
     });
+    // const errorLink = onError(({ graphQLErrors, networkError }) => {
+    //     console.log(graphQLErrors, networkError);
+
+    //     try {
+    //         if (graphQLErrors || networkError) {
+    //             throw new Error("Netoooo")
+    //         }
+    //     } catch (error) {
+    //         return graphQLErrors ?? networkError
+    //     }
+
+    //     if (networkError) {
+    //         // writequery(null, networkError);
+    //     }
+    // });
+
+    // const httpLink = errorLink.concat(
+    //     new HttpLink({
+    //         uri: "http://accuratess.mywire.org:8003/graphql",
+    //         fetchOptions: { cache: "no-store" },
+    //     })
+    // )
+    const httpLink =
+        new HttpLink({
+            uri: "http://accuratess.mywire.org:8003/graphql",
+            fetchOptions: { cache: "no-store" },
+        })
+
+
 
     return new NextSSRApolloClient({
         cache: new NextSSRInMemoryCache(),
@@ -40,6 +69,7 @@ function makeClient() {
 }
 
 export function ApolloWrapper({ children }: React.PropsWithChildren) {
+
     return (
         <ApolloNextAppProvider makeClient={makeClient} >
             {children}
