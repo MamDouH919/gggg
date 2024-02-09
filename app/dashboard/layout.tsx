@@ -70,13 +70,13 @@ function HomeLayout({
     const screenWidth = useWidth();
     const isScreenSmall = isWidthDown("xs", screenWidth);
     const isScreenLarge = isWidthUp("lg", screenWidth);
-    const navDrawerOpen = localStorage.getItem("navDrawerOpen");
+    // const navDrawerOpen = localStorage.getItem("navDrawerOpen");
 
     const isNavDrawerOpen = isScreenSmall
         ? false
-        : navDrawerOpen !== null
-            ? navDrawerOpen === "true"
-            : isScreenLarge;
+        : isScreenLarge
+            // ? navDrawerOpen === "true"
+            // : isScreenLarge;
     const [navDrawer, setNavDrawer] = useState({
         top: isNavDrawerOpen,
         left: isNavDrawerOpen,
